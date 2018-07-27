@@ -30,6 +30,7 @@
                     <button type="button" class="btn btn-outline-danger btn-block" >Cancelar</button>
                 </div>
             </div>
+            <!--<p style="color: red; font-weight: bold;">* Error de Usuario o Contraseña</p>-->
         </form>
         <hr>
         <div class="row login-footer">

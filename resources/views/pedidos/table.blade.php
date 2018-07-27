@@ -1,6 +1,6 @@
 @foreach($pedidos as $pedido)
                         <tr>
-                            <td>{{$pedido->id_pedido}}</td>
+                            <td>{{$pedido->cod_pedido}}</td>
                             <td>{{$pedido->cod_articulo}}</td>
                             <td>{{$pedido->nombre_articulo}}</td>
                             <td>{{$pedido->cliente}}</td>

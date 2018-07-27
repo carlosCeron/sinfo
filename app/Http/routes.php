@@ -53,6 +53,7 @@ Route::post('compras/new', 'CompraController@store');
 Route::get('compras/edit/{id}', 'CompraController@edit');
 Route::post('compras/edit/{id}', 'CompraController@update');
 Route::post('compras/buscar/', 'CompraController@search');
+Route::post('compras/filter/', 'CompraController@filter');
 
 /* Ruta Bodegas */
 
@@ -60,6 +61,7 @@ Route::get('bodegas/', 'BodegaController@index');
 Route::get('bodegas/edit/{id}', 'BodegaController@edit');
 Route::post('bodegas/edit/{id}', 'BodegaController@update');
 Route::post('bodegas/filter/', 'BodegaController@filter');
+
 
 /* Ruta Empaques */
 

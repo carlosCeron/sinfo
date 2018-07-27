@@ -26,6 +26,7 @@ class CompraController extends Controller
         $compras = DB::table('pedidos')
                 ->join('articulos', 'pedidos.cod_articulo', '=', 'articulos.codigo_articulo')
                 ->select('pedidos.*', 'articulos.nombre_articulo as nombre_articulo', 'articulos.cantidad_articulo as cantidad_articulo')
+                ->where('pedidos.estado_pedido', '=', 0)
                 ->get();
 
         /*$compras = DB::table('compras')->where('proveedor_id', 0)->get();*/
@@ -91,13 +92,15 @@ class CompraController extends Controller
         $compras = DB::table('pedidos')
                 ->join('articulos', 'pedidos.cod_articulo', '=', 'articulos.codigo_articulo')
                 ->select('pedidos.*', 'articulos.nombre_articulo as nombre_articulo', 'articulos.cantidad_articulo as cantidad_articulo')
-                ->where('cod_articulo','=', $id)
+                ->where('cod_pedido','=', $id)
                 ->get();
 
 
         $proveedores = Proveedor::all();
 
-        return view('compras.edit', ['compras' =>  $compras, 'proveedores' => $proveedores]);
+        $articulos = Articulo::all();
+
+        return view('compras.edit', ['compras' =>  $compras, 'proveedores' => $proveedores, 'articulos' => $articulos]);
     }
 
     /**
@@ -112,18 +115,17 @@ class CompraController extends Controller
         $compras = DB::table('pedidos')
                 ->join('articulos', 'pedidos.cod_articulo', '=', 'articulos.codigo_articulo')
                 ->select('pedidos.*', 'articulos.nombre_articulo as nombre_articulo', 'articulos.cantidad_articulo as cantidad_articulo')
-                ->where('cod_articulo','=', $request->pedidoId)
+                ->where('cod_pedido','=', $request->pedidoId)
                 ->get();
+
+
 
         foreach($compras as $compra){
 
             $compra_aux = new Compra();
 
-            $proveedor_var = "compra_" ."".$compra->id_pedido;
+            $proveedor_var = "provID_" ."".$compra->id_pedido;
             $precio_var = "precio_" ."".$compra->id_pedido;
-
-
-            /*dd($request->compra_.$compra->id_pedido);*/
 
             $articulo = Articulo::find($compra->cod_articulo);
 
@@ -134,6 +136,11 @@ class CompraController extends Controller
             $compra_aux->cantidad = $compra->cantidad;
             $compra_aux->proveedor = $request->$proveedor_var;
             $compra_aux->precio = $request->$precio_var;
+
+
+            $pedido = Pedido::find($compra->id_pedido);
+            $pedido->estado_pedido = 1;
+            $pedido->save();
 
             $compra_aux->save();
         }
@@ -175,6 +182,25 @@ class CompraController extends Controller
         }
 
         return view('compras.table', ['compras' => $compras]);
+    }
+
+    public function filter(Request $request){
+
+        $parametro = $request->artD;
+
+        $proveedores = null;
+
+        if(!empty($parametro)){
+            $proveedores = DB::table('proveedors')
+            ->where('codigo_articulo', '=', $parametro)
+            ->get();    
+
+        }else{
+            $proveedores = DB::table('proveedors')->get();   
+        }
+
+        return view('compras.filter', ['proveedores' => $proveedores]);
+
     }
 
 }

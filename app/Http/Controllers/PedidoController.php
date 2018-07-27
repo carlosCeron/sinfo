@@ -42,15 +42,34 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
+        $cantidadItems = (int) $request->countItems;
+        $statement = DB::select("show table status like 'pedidos'");
 
-        $pedido = new Pedido();
+        for($i = 1; $i <= $cantidadItems; $i++){
 
-        $pedido->cliente = $request->cliente;
-        $pedido->cod_articulo = $request->articulo;
-        $pedido->cantidad = $request->cantidad;
-        $pedido->fecha_pedido = $request->fecha_pedido;
 
-        $pedido->save();
+            $pedido = new Pedido();
+
+            $articulo = "articulo" . $i;
+            $cantidad = "cantidad" . $i;
+
+
+            if($i == 1){
+                $pedido->cliente = $request->cliente;
+                $pedido->cod_pedido = $statement[0]->Auto_increment;
+                $pedido->cod_articulo = $request->articulo;
+                $pedido->cantidad = $request->cantidad;
+                $pedido->fecha_pedido = $request->fecha_pedido;
+            }else{
+                $pedido->cliente = $request->cliente;
+                $pedido->cod_pedido = $statement[0]->Auto_increment;
+                $pedido->cod_articulo = $request->$articulo;
+                $pedido->cantidad = $request->$cantidad;
+                $pedido->fecha_pedido = $request->fecha_pedido;
+            }
+            
+            $pedido->save();
+        }
 
         return redirect('pedidos')->with('status', true);
     }
@@ -110,7 +129,7 @@ class PedidoController extends Controller
             $pedidos = DB::table('pedidos')
                 ->join('articulos', 'pedidos.cod_articulo', '=', 'articulos.codigo_articulo')
                 ->select('pedidos.*', 'articulos.codigo_articulo as cod_articulo', 'articulos.nombre_articulo as nombre_articulo')
-                ->where('id_pedido','=', $parametro)->get();
+                ->where('cod_pedido','=', $parametro)->get();
         }else{
             $pedidos = DB::table('pedidos')
                 ->join('articulos', 'pedidos.cod_articulo', '=', 'articulos.codigo_articulo')

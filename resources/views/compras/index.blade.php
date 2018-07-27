@@ -62,12 +62,12 @@
                         @foreach($compras as $compra)
                             <tr>
                                 <td>{{$compra->created_at}}</td>
-                                <td>{{$compra->id_pedido}}</td>
+                                <td>{{$compra->cod_pedido}}</td>
+                                <td>{{$compra->cliente}}</td>
                                 <td>{{$compra->cod_articulo}}</td>
                                 <td>{{$compra->nombre_articulo}}</td>
-                                <td>{{$compra->cliente}}</td>
                                 <td>{{$compra->cantidad}}</td>
-                                <td><a href="/compras/edit/{{$compra->cod_articulo}}" class="btn btn-outline-primary btn-block">Editar</a></td>
+                                <td><a href="/compras/edit/{{$compra->cod_pedido}}" class="btn btn-outline-primary btn-block">Editar</a></td>
                             </tr>
                         @endforeach
                         </tbody>
